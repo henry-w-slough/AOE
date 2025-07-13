@@ -3,12 +3,13 @@ using UnityEngine.EventSystems;
 
 public class CameraMovement : MonoBehaviour
 {
-    //Used to rotate the parent of the camera which is placed in the middle of the game area. 
-    //This allows for the camera to rotate relative to it's parent, giving the illusion it's rotating around the game area.
-
     [Header("Rotation")]
     [SerializeField] private float rotationSpeed;
     [SerializeField] private float movementSpeed;
+    [SerializeField] private float zoomSpeed;
+    //Used to rotate the parent of the camera which is placed in the middle of the game area. 
+    //This allows for the camera to rotate relative to it's parent, giving the illusion it's rotating around the game area.
+
 
 
 
@@ -16,6 +17,7 @@ public class CameraMovement : MonoBehaviour
 
     private Rigidbody rb;
     private Transform orientation;
+    private Camera cam;
 
 
 
@@ -24,13 +26,14 @@ public class CameraMovement : MonoBehaviour
         rb = GetComponent<Rigidbody>();
         orientation = GameObject.Find("Orientation").transform;
 
+        cam = GameObject.Find("Camera").GetComponent<Camera>();
     }
 
 
 
 
     // Update is called once per frame
-    void Update()
+    void FixedUpdate()
     {
         Rotation();
 
@@ -40,15 +43,20 @@ public class CameraMovement : MonoBehaviour
             Cursor.lockState = CursorLockMode.Locked;
             MouseMovement();
         }
-
-        if (Input.GetMouseButtonUp(1))
+        else
         {
             Cursor.lockState = CursorLockMode.None;
+        }
+
+        if (Input.GetKey(KeyCode.Q))
+        {
+            Zoom();
         }
 
         
 
     }
+
 
 
 
@@ -65,11 +73,22 @@ public class CameraMovement : MonoBehaviour
     }
 
 
+
+
     void Rotation()
     {
         float keyHorizontal = Input.GetAxisRaw("Horizontal");
 
-        transform.Rotate(0f, keyHorizontal * rotationSpeed * Time.deltaTime, 0f);
+        transform.Rotate(0f, keyHorizontal * rotationSpeed * Time.fixedDeltaTime, 0f);
+    }
+
+
+
+    void Zoom()
+    {
+        Vector3 moveDirection = cam.transform.forward;
+
+        rb.AddForce(moveDirection * zoomSpeed, ForceMode.VelocityChange);
     }
      
 

@@ -65,8 +65,9 @@
     <Analyzer Include="C:\Program Files\Unity\Hub\Editor\6000.0.32f1\Editor\Data\Tools\Unity.SourceGenerators\Unity.UIToolkit.SourceGenerator.dll" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Assets\CameraMovement.cs" />
-    <Compile Include="Assets\FPS_Limiter.cs" />
+    <Compile Include="Assets\Scripts\FPS_Limiter.cs" />
+    <Compile Include="Assets\Scripts\CameraMovement.cs" />
+    <Compile Include="Assets\Scripts\WorldGeneration.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="UnityEngine">
