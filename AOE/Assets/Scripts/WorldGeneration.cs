@@ -5,24 +5,27 @@ using UnityEngine;
 public class WorldGeneration : MonoBehaviour
 {
 
-    [Header("Tile Generation")]
+    [Header("Prefabs")]
     [SerializeField] GameObject groundPrefab;
-    [SerializeField] float groundDistance;
-    [SerializeField] int groundTiles;
 
 
 
-    private GameObject[] allTiles;
+    [Header("Tile Generation")]
+    [SerializeField] int minTileHeight;
+    [SerializeField] int maxTileHeight;
+    [SerializeField] int tileSeperation;
+
+
+
+    [Header("Global Script")]
+    [SerializeField] private GameHandler gameHandler;
 
 
 
 
 
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        allTiles = new GameObject[groundTiles * groundTiles];
-
         GenerateTiles();
     }
 
@@ -33,19 +36,14 @@ public class WorldGeneration : MonoBehaviour
 
     void GenerateTiles()
     {
-        for (int x = 0; x < groundTiles; x++)
+        for (int x = 0; x < gameHandler.BOARD_WIDTH; x++)
         {
-            for (int y = 0; y < groundTiles; y++)
+            for (int y = 0; y < gameHandler.BOARD_WIDTH; y++)
             {
-                allTiles[y] = Instantiate(groundPrefab, new Vector3(x * groundDistance, Random.Range(1, 10), y * groundDistance), Quaternion.identity);
+                GameObject newTile = Instantiate(groundPrefab, new Vector3(x * gameHandler.TILE_WIDTH, Random.Range(minTileHeight * gameHandler.TILE_WIDTH, maxTileHeight * gameHandler.TILE_WIDTH), y * gameHandler.TILE_WIDTH), Quaternion.identity);
                 
+                newTile.transform.localScale = new Vector3(gameHandler.TILE_WIDTH, gameHandler.TILE_WIDTH, gameHandler.TILE_WIDTH);
             }
         }
-    }
-
-
-    void addNoiseToTiles()
-    {
-        
     }
 }

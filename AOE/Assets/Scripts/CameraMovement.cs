@@ -1,23 +1,17 @@
 using UnityEngine;
-using UnityEngine.EventSystems;
 
 public class CameraMovement : MonoBehaviour
 {
+    //camera handles camera, obviously. This class is used for movement around the world (board). Rotation is handled in seperate class.
     [Header("Rotation")]
-    [SerializeField] private float rotationSpeed;
     [SerializeField] private float movementSpeed;
     [SerializeField] private float zoomSpeed;
-    //Used to rotate the parent of the camera which is placed in the middle of the game area. 
-    //This allows for the camera to rotate relative to it's parent, giving the illusion it's rotating around the game area.
-
-
-
 
 
 
     private Rigidbody rb;
     private Transform orientation;
-    private Camera cam;
+
 
 
 
@@ -25,35 +19,45 @@ public class CameraMovement : MonoBehaviour
     {
         rb = GetComponent<Rigidbody>();
         orientation = GameObject.Find("Orientation").transform;
-
-        cam = GameObject.Find("Camera").GetComponent<Camera>();
     }
+
+
 
 
 
 
     // Update is called once per frame
-    void FixedUpdate()
+    void Update()
     {
-        Rotation();
+        //setting orientation rotation so it faces in the same direction as the camera and allows the camera to be angled down without affecting movement
+        orientation.rotation = new Quaternion(0f, transform.rotation.y, 0f, 1);
 
 
+        //input from mouse for movement around the World
         if (Input.GetMouseButton(1))
         {
             Cursor.lockState = CursorLockMode.Locked;
-            MouseMovement();
+            Movement();
         }
         else
         {
+            //releasing cursor
             Cursor.lockState = CursorLockMode.None;
         }
 
+
+
+
+        //getting input for zooming in and out
         if (Input.GetKey(KeyCode.Q))
         {
-            Zoom();
+            Zoom("forward");
         }
 
-        
+        if (Input.GetKey(KeyCode.E))
+        {
+            Zoom("backward");
+        }
 
     }
 
@@ -61,10 +65,10 @@ public class CameraMovement : MonoBehaviour
 
 
 
-    void MouseMovement()
+    void Movement()
     {
-        float mouseVertical = Input.GetAxis("Mouse Y");
-        float mouseHorizontal = Input.GetAxis("Mouse X");
+        float mouseVertical = Input.GetAxisRaw("Mouse Y");
+        float mouseHorizontal = Input.GetAxisRaw("Mouse X");
 
         //getting move direction based on facing direction and input direction
         Vector3 moveDirection = orientation.forward * mouseVertical + orientation.right * mouseHorizontal;
@@ -75,23 +79,21 @@ public class CameraMovement : MonoBehaviour
 
 
 
-    void Rotation()
+
+    void Zoom(string direction)
     {
-        float keyHorizontal = Input.GetAxisRaw("Horizontal");
+        if (direction == "forward")
+        {
+            Vector3 moveDirection = transform.forward;
+            rb.AddForce(moveDirection * zoomSpeed * 100f * Time.deltaTime, ForceMode.VelocityChange);
+        }
 
-        transform.Rotate(0f, keyHorizontal * rotationSpeed * Time.fixedDeltaTime, 0f);
-    }
-
-
-
-    void Zoom()
-    {
-        Vector3 moveDirection = cam.transform.forward;
-
-        rb.AddForce(moveDirection * zoomSpeed, ForceMode.VelocityChange);
+        if (direction == "backward")
+        {
+            Vector3 moveDirection = transform.forward;
+            rb.AddForce(moveDirection * -zoomSpeed * 100f * Time.deltaTime, ForceMode.VelocityChange);
+        }
     }
      
-
-
 
 }
