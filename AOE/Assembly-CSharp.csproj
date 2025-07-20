@@ -68,8 +68,7 @@
     <Compile Include="Assets\Scripts\GameHandler.cs" />
     <Compile Include="Assets\Scripts\FPS_Limiter.cs" />
     <Compile Include="Assets\Scripts\CameraMovement.cs" />
-    <Compile Include="Assets\Scripts\WorldGeneration.cs" />
-    <Compile Include="Assets\Scripts\CameraAnchor.cs" />
+    <Compile Include="Assets\Scripts\Cursor.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="UnityEngine">
